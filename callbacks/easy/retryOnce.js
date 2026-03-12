@@ -5,9 +5,12 @@
 // if the first attempt rejects.
 // If the second attempt also rejects, the error should be propagated.
 
-
 function retryOnce(fn) {
-
+  return function (...args) {
+    return fn(...args).catch(() => {
+      return fn(...args);
+    });
+  };
 }
 
 module.exports = retryOnce;
