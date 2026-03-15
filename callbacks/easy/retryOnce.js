@@ -6,9 +6,15 @@
 // If the second attempt also rejects, the error should be propagated.
 
 function retryOnce(fn) {
-  return function (...args) {
-    return fn(...args).catch(() => {
-      return fn(...args);
+  return function (cb) {
+    fn((err, result) => {
+      if (!err) {
+        return cb(null, result);
+      }
+
+      fn((err2, result2) => {
+        cb(err2, result2);
+      });
     });
   };
 }
